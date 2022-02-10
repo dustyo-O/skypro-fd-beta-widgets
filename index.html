@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .form-field__input_hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Типовые виджеты</h1>
+    Язык программирования
+    <div class="form-field">
+        <div class="form-field__part">
+            <select class="form-field__select">
+                <option value="javascript">JavaScript</option>
+                <option value="c++">C++</option>
+                <option value="python">Python</option>
+                <option value="custom">Другой...</option>
+            </select>
+        </div>
+        <div class="form-field__part">
+            <input class="form-field__input" type="text">
+        </div>
+    </div>
+    <script>
+        let isCustomLanguage = false;
+
+        const formField = document.querySelector('.form-field');
+        const formFieldSelect = formField.querySelector('.form-field__select');
+        const formFieldInput = formField.querySelector('.form-field__input');
+
+        formFieldSelect.addEventListener('change', (event) => {
+            isCustomLanguage = event.target.value === 'custom';
+
+            formFieldRedraw();
+        });
+
+        function formFieldRedraw() {
+            if (isCustomLanguage) {
+                formFieldInput.classList.remove('form-field__input_hidden');
+            } else {
+                formFieldInput.classList.add('form-field__input_hidden');
+            }
+        }
+
+        function formFieldGetValue() {
+            return isCustomLanguage ? formFieldInput.value : formFieldSelect.value;
+        }
+
+        formFieldRedraw();
+
+    </script>
+</body>
+</html>

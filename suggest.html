@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .suggest {
+            display: inline-block;
+        }
+
+        .suggest__menu {
+            position: absolute;
+            padding: 8px 12px;
+
+            max-height: 200px;
+            overflow-y: scroll;
+
+            border: 1px solid black;
+            background-color: antiquewhite;
+        }
+
+        .suggest__menu_hidden {
+            display: none;
+        }
+
+        .suggest__menu-item {
+            cursor: pointer;
+        }
+
+        .suggest__menu-item:hover {
+            background-color: cadetblue;
+        }
+    </style>
+</head>
+<body>
+    <h1>Введите город</h1>
+    <div class="suggest">
+        <input class="suggest__input" type="text">
+        <div class="suggest__menu suggest__menu_hidden"></div>
+    </div>
+    <p>Нажав на кнопку «Написать реферат», вы лично создаете уникальный текст, причем именно от вашего нажатия на кнопку зависит, какой именно текст получится — таким образом, авторские права на реферат принадлежат только вам.</p>
+    <script src="cities.js"></script>
+    <script>
+        let suggestValue;
+        let suggestShowMenu = false;
+        let suggestCities = [];
+
+        const suggest = document.querySelector('.suggest');
+        const suggestInput = suggest.querySelector('.suggest__input');
+        const suggestMenu = suggest.querySelector('.suggest__menu');
+
+        suggestInput.addEventListener('input', (event) => {
+            const value = event.target.value;
+
+            const searchValue = value.slice(0, 1).toUpperCase() + value.slice(1).toLowerCase();
+
+            console.log(searchValue);
+            suggestShowMenu = true;
+            suggestCities = cities.filter(
+                city => city.city.startsWith(searchValue)
+            );
+
+            suggestRedraw();
+        });
+
+        suggestMenu.addEventListener('click', (event) => {
+            const menuItem = event.target;
+
+            if (!menuItem.classList.contains('suggest__menu-item')) {
+                return;
+            }
+
+            const city = menuItem.dataset.city;
+
+            suggestInput.value = city;
+
+            suggestShowMenu = false;
+            suggestValue = city;
+
+            suggestRedraw();
+        });
+
+        function suggestRedraw() {
+            if (!suggestShowMenu) {
+                suggestMenu.classList.add('suggest__menu_hidden');
+
+                return;
+            }
+            suggestMenu.classList.remove('suggest__menu_hidden');
+
+            suggestMenu.innerHTML = '';
+
+            if (suggestCities.length) {
+                suggestCities.forEach((city) => {
+                    const suggestMenuItem = document.createElement('div');
+
+                    suggestMenuItem.classList.add('suggest__menu-item');
+                    suggestMenuItem.textContent = city.city;
+                    suggestMenuItem.dataset.city = city.city;
+                    suggestMenu.appendChild(suggestMenuItem);
+                });
+            } else {
+                suggestMenu.appendChild(
+                    document.createTextNode('Ничего не найдено...')
+                );
+            }
+        }
+    </script>
+</body>
+</html>
